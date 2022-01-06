@@ -1,6 +1,10 @@
 package parll;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -24,16 +28,49 @@ public class Main {
         nums.add(6);
         nums.add(8);
 
-        for (int num : nums ) {
+        for (int num : nums) {
             System.out.println(num * num);
         }
     }
+        public void futures () {
+            ExecutorService service = Executors.newFixedThreadPool(5);
 
-    public static void main(String[] args) {
-        Main main = new Main();
-        System.out.println("without stream");
-        main.withoutStream();
-        System.out.println("with stream");
-        main.withStream();
+            Future<String> task1 = service.submit(() -> {
+                // uploading images to server
+                Thread.sleep(2500);
+                return "Hello World From Task 1";
+            });
+
+            Future<String> task2 = service.submit(() -> {
+                // extracting data from spreadsheet
+                Thread.sleep(5500);
+                return "Hello World From Task 2";
+            });
+
+            try {
+                if (!task1.isCancelled()) {
+                    System.out.println(" Task1 Completed : " + task1.get());
+                }
+                if (!task2.isCancelled()) {
+                    System.out.println(" Task2 Completed : " + task2.get());
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            service.shutdown();
+
+        }
+
+        public static void main (String[]args){
+            Main main= new Main();
+//        System.out.println("without stream");
+//        mai.withoutStream();
+//        System.out.println("with stream");
+//        mai.withStream();
+
+            System.out.println("future");
+            main.futures();
+
+        }
     }
-}
