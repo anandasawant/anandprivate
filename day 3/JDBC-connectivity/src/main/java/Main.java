@@ -10,15 +10,18 @@ public class Main {
             Connectivity connectivity = new Connectivity();
 
             DbService service = new DbService(connectivity.getConnection());
-            int cnt = service.create(
-                    5,
-                    "lmn",
-                    Date.valueOf(LocalDate.now()),
-                    true
-            );
-            if(cnt > 0) {
-                System.out.println("Employee Created Successfully");
-            }
+//            int cnt = service.create(
+//                    5,
+//                    "lmn",
+//                    Date.valueOf(LocalDate.now()),
+//                    true
+//            );
+//            if(cnt > 0) {
+//                System.out.println("Employee Created Successfully");
+//            }
+
+            service.findEmployeeByName("pqr");
+//            service.find();
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
