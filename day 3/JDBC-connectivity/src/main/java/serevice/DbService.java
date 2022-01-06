@@ -67,6 +67,24 @@ public class DbService {
        // connection.commit();
         rs.close();
     }
+    public void txnDemo(int empId, String name, Date dob, boolean isManager, int upId) throws SQLException {
+        var sql1 = "insert into emp_info values(?, ? , ?, ?)";
+        var ps1 = connection.prepareStatement(sql1);
+        ps1.setInt(1, empId);
+        ps1.setString(2, name);
+        ps1.setDate(3, dob);
+        ps1.setBoolean(4, isManager);
+        var aff1 = ps1.executeUpdate();
+//        connection.commit();
+
+        var sql2 = "update emp_info set emp_name = 'none' where emp_id = ?";
+        var ps2 = connection.prepareStatement(sql2);
+        ps2.setInt(1, upId);
+        var aff2 = ps2.executeUpdate();
+        if(aff2 == 0) connection.rollback();
+
+        connection.commit();
+    }
 
 
 }

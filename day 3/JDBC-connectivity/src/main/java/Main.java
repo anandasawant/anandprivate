@@ -20,9 +20,10 @@ public class Main {
 //                System.out.println("Employee Created Successfully");
 //            }
 
-            service.findEmployeeByName("pqr");
+//            service.findEmployeeByName("pqr");
 //            service.find();
 
+            service.txnDemo(12, "abc", Date.valueOf(LocalDate.now()), true, 13);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
