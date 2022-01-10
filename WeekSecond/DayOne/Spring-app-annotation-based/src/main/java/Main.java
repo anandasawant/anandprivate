@@ -1,3 +1,4 @@
+import com.ani.car.Bwm;
 import com.ani.car.Car;
 import com.ani.config.AppConfig;
 import com.ani.driver.Driver;
@@ -11,8 +12,13 @@ public class Main {
 
         ApplicationContext context= new AnnotationConfigApplicationContext(AppConfig.class);
 
-        Car car1 =(Car) context.getBean("car");
-        Driver driver1=(Driver) context.getBean("driver");
+        Car car1 = (Car) context.getBean("car");
+        car1.speedUp();
+
+        Bwm bmw = context.getBean(Bwm.class);
+        bmw.openWindow();
+
+        Driver driver1 = (Driver) context.getBean("driver");
 
         Arrays.stream(context.getBeanDefinitionNames()).forEach(System.out::println);
     }
