@@ -1,15 +1,29 @@
 package com.week2.casestudy.service;
 
 import com.week2.casestudy.domain.BankAccount;
+import com.week2.casestudy.exception.InvalidAmountException;
 import com.week2.casestudy.repository.BankRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
+@Transactional(
+        isolation = Isolation.READ_UNCOMMITTED,
+        rollbackFor = SQLException.class,
+        noRollbackFor = InvalidAmountException.class
+)
 @Service
 public class BankServiceImpl implements BankService{
+
+    private final Logger logger = LoggerFactory.getLogger(BankServiceImpl.class);
+
 
     @Autowired
     private BankRepository repository;
@@ -37,17 +51,40 @@ public class BankServiceImpl implements BankService{
     @Transactional
     @Override
     public double withdraw(Long acNum, double amt) {
+
+        logger.info("Withdrawing Money from "+acNum +" with Amount  "+amt);
+        logger.warn("Make sure amount possittive");
+
         repository.withdraw(amt, acNum);
         return amt;
     }
 
     @Override
-    public double deposit(Long acNum, double amt) {
-        return 0;
+    public double deposit(Long acNum, double amt)throws InvalidAmountException {
+        if(amt <= 0) throw new InvalidAmountException("Amount Should be Non Zero Positive "+amt);
+
+        Optional<BankAccount> op = repository.findById(acNum);
+
+        BankAccount baOld = op.orElseThrow();
+        double existingBalance = baOld.getBalance();
+        double newBalance = existingBalance + amt;
+
+        BankAccount baNew = new BankAccount();
+        baNew.setBalance(newBalance);
+        baNew.setAcCrDt(baOld.getAcCrDt());
+        baNew.setStatus(baOld.getStatus());
+        baNew.setAcHldNm(baOld.getAcHldNm());
+        baNew.setAcNum(baOld.getAcNum());
+
+        repository.save(baNew);
+
+//        withdraw(acNum, 10);
+
+        return baNew.getBalance();
     }
 
     @Override
-    public int transferMoney(Long srcAc, Long dstAc, double amt) {
+    public int transferMoney(Long srcAc, Long dstAc, double amt) throws InvalidAmountException  {
         return 0;
     }
 
