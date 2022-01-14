@@ -37,6 +37,15 @@ public class CarControllerTests {
         Assertions.assertNotNull(car);
     }
 
+    @DisplayName("GET - Car - Checking object content")
+    @Test
+    public void testObjectContent() {
+        String url = "http://" + "localhost" +":" + port +"/car";
+        var re = template.getForEntity(url, Car.class);
+        var car = re.getBody();
+        Assertions.assertEquals(car.getId(), 10 );
+    }
+
     @DisplayName("GET - Car - Checking Status Code")
     @Test
     public void testGetStatusCode() {
