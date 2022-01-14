@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
 import java.time.LocalDate;
+
+@SpringBootTest
 public class CarServiceUnitTest {
 
     @Test
