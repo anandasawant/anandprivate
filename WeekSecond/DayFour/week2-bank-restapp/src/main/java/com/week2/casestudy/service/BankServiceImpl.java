@@ -6,6 +6,7 @@ import com.week2.casestudy.repository.BankRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,16 +35,45 @@ public class BankServiceImpl implements BankService{
 
     @Override
     public int updateAccountDetails(BankAccount ba) {
+
         return 0;
     }
 
     @Override
     public boolean activateAccount(Long acNum) {
-        return false;
+
+
+        Optional<BankAccount> obj = repository.findByStatusFalse(acNum);
+
+        BankAccount baOld = obj.orElseThrow();
+        Boolean existingStatus = obj.get().getStatus();
+        Boolean newStatus = true;
+
+        BankAccount baNew = new BankAccount();
+
+        baNew.setStatus(newStatus);
+
+
+        repository.save(baNew);
+        return true;
     }
 
     @Override
-    public boolean deActivateAccount(Long acNum) {
+    public boolean deActivateAccount(Long acNum)
+    {
+        Optional<BankAccount> obj = repository.findByStatusTrue(acNum);
+        BankAccount baOld = obj.orElseThrow();
+        Boolean existingStatus = obj.get().getStatus();
+        Boolean newStatus = false;
+
+        BankAccount baNew = new BankAccount();
+
+        baNew.setStatus(newStatus);
+
+
+        repository.save(baNew);
+
+
         return false;
     }
 
@@ -89,13 +119,18 @@ public class BankServiceImpl implements BankService{
     }
 
     @Override
-    public BankAccount findAccountByAcNum(Long acNum) {
-        return null;
+    public List<BankAccount> findAccountByAcNum(Long acNum) {
+
+//        List<BankAccount>obj =repository.findByAcNum(acNum);
+
+//        BankAccount ba= obj.get();
+        return repository.findByAcNum(acNum);
     }
 
     @Override
     public List<BankAccount> findAllBankAccounts() {
-        return null;
+
+        return repository.findAll();
     }
 
     @Override

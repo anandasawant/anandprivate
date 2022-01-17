@@ -83,4 +83,63 @@ public class BankController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping
+    public ResponseEntity<AppResponse<List<BankAccount>>> findAll(){
+
+        var response = new AppResponse<List<BankAccount>>();
+        response.setMsg("account list");
+        response.setSts("success");
+        response.setBody(service.findAllBankAccounts());
+            try{
+                return ResponseEntity.ok(response);
+            }catch (Exception e){
+                return null;
+            }
+
+
+    }
+
+    @PutMapping("/Activate")
+    public  ResponseEntity<AppResponse<List<BankAccount>>> ActivateAccount(@RequestBody BankAccount ba){
+
+        var response =new AppResponse<List <BankAccount>>();
+
+//        Boolean status=service.activateAccount(ba.getAcNum());
+        Long acNo= ba.getAcNum();
+        service.activateAccount(acNo);
+        response.setMsg("Account Acativated");
+        response.setMsg("Sucess");
+
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PutMapping("/Activate")
+    public  ResponseEntity<AppResponse<List<BankAccount>>> DeActivateAccount(@RequestBody BankAccount ba){
+
+        var response =new AppResponse<List <BankAccount>>();
+
+//        Boolean status=service.activateAccount(ba.getAcNum());
+        Long acNo= ba.getAcNum();
+        service.deActivateAccount(acNo);
+        response.setMsg("Deactivate Account");
+        response.setMsg("Sucess");
+
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{AcNum}")
+    public ResponseEntity<AppResponse<List<BankAccount>>> findByAccountNo(@PathVariable Long acNum) {
+        var response = new AppResponse<List<BankAccount>>();
+        response.setMsg("account list");
+        response.setSts("success");
+//       BankAccount ba= service.findAccountByAcNum(acNum);
+        response.setBody(service.findAccountByAcNum(acNum) );
+
+        return ResponseEntity.ok(response);
+    }
+
 }

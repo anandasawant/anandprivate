@@ -21,7 +21,7 @@ public interface BankService {
 
     int transferMoney(Long srcAc, Long dstAc, double amt)throws InvalidAmountException;;
 
-    BankAccount findAccountByAcNum(Long acNum);
+    List <BankAccount>findAccountByAcNum(Long acNum);
 
     List<BankAccount> findAllBankAccounts();
 
