@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Transactional(
@@ -111,5 +112,12 @@ public class BillServiceImpl implements BillService {
         }
 
         return list;
+    }
+
+    @Override
+    public List<Map<String, Integer>> findTreatmentWiseAmount() {
+
+
+        return repository.findTreatmentwiseAmountData();
     }
 }
