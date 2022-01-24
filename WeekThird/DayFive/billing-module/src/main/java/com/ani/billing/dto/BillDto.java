@@ -25,4 +25,8 @@ public class BillDto {
     private Boolean billStatus;
     @NotNull
     private Integer billAmount;
+
+    public BillDto() {
+
+    }
 }
