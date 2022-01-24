@@ -8,21 +8,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Repository
 public interface BankRepository extends JpaRepository<BankAccount ,Long> {
 
     @Modifying // allows firing insert, update and delete queries
-    // @Query allows just select statements
     @Query(value = "update bank_account set balance = :bal where ac_num = :acNum", nativeQuery = true)
     void withdraw(@Param("bal") double bal, @Param("acNum") Long acNum);
 
     List<BankAccount> findByAcHldNmStartingWith(String prefix);
 
-    Optional<BankAccount> findByStatusTrue(Long acNum);
-
-    Optional<BankAccount> findByStatusFalse(Long acNum);
-
-    List<BankAccount>findByAcNum(long acNum);
+//    List<BankAccount> findByStatusTrue(Long acNum);
+//
+//    List<BankAccount> findByStatusFalse(Long acNum);
+//
+//    List<BankAccount>findByAcNum(long acNum);
 }

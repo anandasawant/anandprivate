@@ -1,7 +1,11 @@
 package com.week2.casestudy.controller;
 
 import com.week2.casestudy.domain.BankAccount;
+import com.week2.casestudy.dto.AmountTransferDto;
 import com.week2.casestudy.dto.AppResponse;
+import com.week2.casestudy.exception.AccountNotFoundException;
+import com.week2.casestudy.exception.InActiveAccountException;
+import com.week2.casestudy.exception.InvalidAcHlNameException;
 import com.week2.casestudy.exception.InvalidAmountException;
 import com.week2.casestudy.service.BankService;
 import org.slf4j.Logger;
@@ -74,17 +78,26 @@ public class BankController {
         }
     }
 
-    @GetMapping("/{prefix}")
+    @GetMapping("/{prefix}")//get http://localhost:8080/bank/prefix
     public ResponseEntity<AppResponse<List<BankAccount>>> accountsStartWith(@PathVariable String prefix) {
-        var response = new AppResponse<List<BankAccount>>();
-        response.setMsg("account list");
-        response.setSts("success");
-        response.setBody(service.namesStartsWith(prefix));
+        try {
+            var response = new AppResponse<List<BankAccount>>();
+            response.setMsg("account list");
+            response.setSts("success");
+            response.setBody(service.namesStartsWith(prefix));
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        } catch (InvalidAcHlNameException e) {
+            var response = new AppResponse<List<BankAccount>>();
+            response.setMsg("Invalid Name");
+            response.setSts("Fail");
+            return ResponseEntity.ok(response);
+        }
+
+
     }
 
-    @GetMapping
+    @GetMapping("/findall")
     public ResponseEntity<AppResponse<List<BankAccount>>> findAll(){
 
         var response = new AppResponse<List<BankAccount>>();
@@ -100,46 +113,81 @@ public class BankController {
 
     }
 
-    @PutMapping("/Activate")
-    public  ResponseEntity<AppResponse<List<BankAccount>>> ActivateAccount(@RequestBody BankAccount ba){
+    @GetMapping("/activate")//PUT -> http://localhost:8080/bank/activate
+    public  ResponseEntity<AppResponse<Boolean>> activateAccount(@RequestBody BankAccount ba){
 
-        var response =new AppResponse<List <BankAccount>>();
+        Boolean status=service.activateAccount(ba.getAcNum());
+        var response =new AppResponse<Boolean>();
 
-//        Boolean status=service.activateAccount(ba.getAcNum());
-        Long acNo= ba.getAcNum();
-        service.activateAccount(acNo);
         response.setMsg("Account Acativated");
         response.setMsg("Sucess");
+        response.setBody(status);
 
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
     }
 
 
-    @PutMapping("/Activate")
-    public  ResponseEntity<AppResponse<List<BankAccount>>> DeActivateAccount(@RequestBody BankAccount ba){
+    @GetMapping("/deActivate")//PUT -> http://localhost:8080/bank/deActivate
+    public  ResponseEntity<AppResponse<Boolean>> DeActivateAccount(@RequestBody BankAccount ba){
 
-        var response =new AppResponse<List <BankAccount>>();
+        var response =new AppResponse<Boolean>();
 
-//        Boolean status=service.activateAccount(ba.getAcNum());
-        Long acNo= ba.getAcNum();
-        service.deActivateAccount(acNo);
+        Boolean status=service.deActivateAccount(ba.getAcNum());
+
+
         response.setMsg("Deactivate Account");
         response.setMsg("Sucess");
+        response.setBody(status);
 
 
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/{AcNum}")
     public ResponseEntity<AppResponse<List<BankAccount>>> findByAccountNo(@PathVariable Long acNum) {
         var response = new AppResponse<List<BankAccount>>();
-        response.setMsg("account list");
+        response.setMsg("account find Successfull");
         response.setSts("success");
-//       BankAccount ba= service.findAccountByAcNum(acNum);
-        response.setBody(service.findAccountByAcNum(acNum) );
+        response.setBody((List<BankAccount>)service.findAccountByAcNum(acNum));
 
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping // Put -> http://localhost:8080/bank/update
+    public ResponseEntity<AppResponse<BankAccount>> updateBankDatails(@RequestBody BankAccount ba) {
+
+        logger.info("update  bank account details");
+
+        service.updateAccountDetails(ba);
+
+        var response = new AppResponse<BankAccount>();
+        response.setMsg("account updated successfully");
+        response.setSts("success");
+        response.setBody(ba);
+         ResponseEntity.ok(response);
+         return ResponseEntity.ok(response);
+    }
+    @PutMapping("/transfer")
+    public ResponseEntity<AppResponse<Integer>> transferMoney(@RequestBody AmountTransferDto dto) {
+
+        try {
+            int sts = service.transferMoney(dto.getSrcAc(), dto.getDstAc(), dto.getAmt());
+            var response = new AppResponse<Integer>();
+            response.setSts("success");
+            response.setMsg("money transfer successful");
+            response.setBody(sts);
+
+            return ResponseEntity.ok(response);
+        }catch (InvalidAmountException | AccountNotFoundException | InActiveAccountException ex) {
+            var response = new AppResponse<Integer>();
+            response.setSts("fail");
+            response.setMsg(ex.getMessage());
+            response.setBody(0);
+
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }
