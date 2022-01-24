@@ -123,6 +123,7 @@ try {
             String errorField = fe.getField();
             String errorMessage = fe.getDefaultMessage();
 
+
             messages.put(errorField, errorMessage);
         }
 

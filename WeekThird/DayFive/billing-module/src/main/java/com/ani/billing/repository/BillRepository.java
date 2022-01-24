@@ -15,7 +15,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
 
 
 
-    @Query(value = "SELECT treatment , sum(bill_amount) from bill GROUP BY treatment", nativeQuery = true)
+    @Query(value = "SELECT id from () bill where amount<4000", nativeQuery = true)
     List<Map<String,Integer>> findTreatmentwiseAmountData();
 
 
