@@ -3,6 +3,7 @@ package com.ani.billing.service;
 import com.ani.billing.domain.Bill;
 import com.ani.billing.dto.BillDto;
 import com.ani.billing.exception.InvalidIdException;
+import com.ani.billing.exception.InvalidTreatmentException;
 import com.ani.billing.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,7 +85,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public List<BillDto> findByUnpaidBill(String treatment) {
+    public List<BillDto> findByUnpaidBill(String treatment) throws InvalidTreatmentException {
 
         List<Bill> allList = repository.findAll();
 
@@ -109,6 +110,7 @@ public class BillServiceImpl implements BillService {
                 list.add(dto);
 
             }
+
         }
 
         return list;

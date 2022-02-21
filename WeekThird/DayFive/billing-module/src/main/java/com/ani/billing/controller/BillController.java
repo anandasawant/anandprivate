@@ -4,6 +4,7 @@ package com.ani.billing.controller;
 import com.ani.billing.dto.AppResponse;
 import com.ani.billing.dto.BillDto;
 import com.ani.billing.exception.InvalidIdException;
+import com.ani.billing.exception.InvalidTreatmentException;
 import com.ani.billing.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -88,7 +89,7 @@ try {
     }
 
     @GetMapping("/{treatment}")
-    public ResponseEntity<AppResponse<List<BillDto>>>findByTreatment(@PathVariable String treatment){
+    public ResponseEntity<AppResponse<List<BillDto>>>findByTreatment(@PathVariable String treatment) throws InvalidTreatmentException {
 
         var response =new AppResponse<List<BillDto>>();
         response.setMessage("List of UnpaidBill");
