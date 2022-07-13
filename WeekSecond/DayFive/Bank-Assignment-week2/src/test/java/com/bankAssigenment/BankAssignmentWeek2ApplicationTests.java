@@ -8,6 +8,7 @@ class BankAssignmentWeek2ApplicationTests {
 
 	@Test
 	void contextLoads() {
+		
 	}
 
 }

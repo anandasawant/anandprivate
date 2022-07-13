@@ -18,13 +18,20 @@ public class Bank {
     private Double balance;
     private Boolean status;
 
-
     public Long getAcNum() {
         return acNum;
     }
 
     public void setAcNum(Long acNum) {
         this.acNum = acNum;
+    }
+
+    public Date getAcCrDt() {
+        return acCrDt;
+    }
+
+    public void setAcCrDt(Date acCrDt) {
+        this.acCrDt = acCrDt;
     }
 
     public String getAcHldNm() {
@@ -49,13 +56,5 @@ public class Bank {
 
     public void setStatus(Boolean status) {
         this.status = status;
-    }
-
-    public Date getAcCrDt() {
-        return acCrDt;
-    }
-
-    public void setAcCrDt(Date acCrDt) {
-        this.acCrDt = acCrDt;
     }
 }

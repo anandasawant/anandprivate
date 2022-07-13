@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@RestController("bank")
 public class Bankcontroller {
 
     @Autowired
     private Bankrepo bankrepo;
 
     @RequestMapping("add")
+
     public List<Bank> createAcount(@RequestBody Bank bank){
         try {
             bankrepo.save(bank);
